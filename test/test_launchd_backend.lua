@@ -24,21 +24,29 @@ test.group("launchd.resolve_config", function()
   })
   test.equal(cfg.ProgramArguments[1], "/usr/bin/echo", "array arg")
 
-  -- Restart "on-failure" → KeepAlive.Crashed
+  -- Restart "on-failure" → KeepAlive = {SuccessfulExit=false}
   cfg = launchd.resolve_config({
     Label = "com.test.crash",
     Program = "/usr/bin/true",
     Restart = "on-failure",
   })
-  test.equal(cfg.KeepAlive.Crashed, true, "on-failure sets Crashed")
+  test.equal(cfg.KeepAlive.SuccessfulExit, false, "on-failure sets SuccessfulExit=false")
 
-  -- Restart "always" → KeepAlive.SuccessfulExit
+  -- Restart "always" → KeepAlive = true
   cfg = launchd.resolve_config({
     Label = "com.test.always",
     Program = "/usr/bin/true",
     Restart = "always",
   })
-  test.equal(cfg.KeepAlive.SuccessfulExit, true, "always sets SuccessfulExit")
+  test.equal(cfg.KeepAlive, true, "always sets KeepAlive=true")
+
+  -- Restart "never" → KeepAlive = false
+  cfg = launchd.resolve_config({
+    Label = "com.test.never",
+    Program = "/usr/bin/true",
+    Restart = "never",
+  })
+  test.equal(cfg.KeepAlive, false, "never sets KeepAlive=false")
 
   -- StdOut → StandardOutPath
   cfg = launchd.resolve_config({

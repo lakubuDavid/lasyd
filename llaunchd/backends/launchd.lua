@@ -118,20 +118,14 @@ function M.resolve_config(config)
   end
 
   if config.Restart then
-    local keep_alive = {}
     if config.Restart == "always" then
-      keep_alive.SuccessfulExit = true
+      out.KeepAlive = true
     elseif config.Restart == "on-failure" then
-      keep_alive.Crashed = true
-    elseif config.Restart == "never" then
-      -- KeepAlive = false
-    else
-      error("invalid Restart value: " .. tostring(config.Restart))
-    end
-    if next(keep_alive) then
-      out.KeepAlive = keep_alive
+      out.KeepAlive = { SuccessfulExit = false }
     elseif config.Restart == "never" then
       out.KeepAlive = false
+    else
+      error("invalid Restart value: " .. tostring(config.Restart))
     end
   elseif config.KeepAlive ~= nil then
     out.KeepAlive = config.KeepAlive
