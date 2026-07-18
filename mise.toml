@@ -1,2 +1,14 @@
 [tools]
 lua = "latest"
+
+[tasks.test]
+run = "lua test/run.lua"
+
+[tasks.install]
+run = "ln -sf /Users/davidlakubu/Code/Lua/llaunchd/bin/llaunchd /Users/davidlakubu/tools/llaunchd"
+
+[tasks.list]
+run = "bin/llaunchd list"
+
+[tasks.help]
+run = "bin/llaunchd help"
