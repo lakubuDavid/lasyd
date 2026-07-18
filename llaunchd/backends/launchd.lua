@@ -62,6 +62,34 @@ function M.load_service(name)
   return result, nil
 end
 
+--- Check if Program uses a bare command name (no leading /)
+---@param config table
+---@return boolean ok, string|nil error
+function M.validate_program(config)
+  local program = config.Program
+  if not program then return true, nil end
+
+  -- Extract just the command name (first word)
+  local cmd = program:match("^(%S+)")
+  if not cmd then return true, nil end
+
+  -- If it starts with / or ./ or ../, it's a path — OK
+  if cmd:match("^%./") or cmd:match("^%../") or cmd:match("^/") then
+    return true, nil
+  end
+
+  -- Check if user set PATH in Env
+  local has_path = config.Env and config.Env.PATH
+  if has_path then
+    return true, nil
+  end
+
+  return false, string.format(
+    "bare command '%s' not found in launchd PATH (use absolute path or set Env.PATH, or pass --unsafe-relative-path)",
+    cmd
+  )
+end
+
 --- Resolve shorthand fields to native launchd plist keys
 ---@param config table
 ---@return table

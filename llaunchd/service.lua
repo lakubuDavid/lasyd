@@ -71,12 +71,23 @@ function M.resolve_config(config)
 end
 
 ---@param name string
+---@param opts table|nil  { unsafe_relative = bool }
 ---@return boolean, string|nil
-function M.install_unit(name)
+function M.install_unit(name, opts)
   local backend = M.get_backend()
   local config, err = backend.load_service(name)
   if not config then
     return false, err
+  end
+  -- Validate program path
+  if backend.validate_program then
+    local ok, verr = backend.validate_program(config)
+    if not ok then
+      local flags = pcall(require, "llaunchd_flags") and require("llaunchd_flags") or {}
+      if not (opts and opts.unsafe_relative) and not flags.unsafe_relative then
+        return false, verr
+      end
+    end
   end
   return backend.install_unit(name, config)
 end
@@ -93,12 +104,23 @@ function M.uninstall_unit(name)
 end
 
 ---@param name string
+---@param opts table|nil  { unsafe_relative = bool }
 ---@return boolean, string|nil
-function M.load_unit(name)
+function M.load_unit(name, opts)
   local backend = M.get_backend()
   local config, err = backend.load_service(name)
   if not config then
     return false, err
+  end
+  -- Validate program path
+  if backend.validate_program then
+    local ok, verr = backend.validate_program(config)
+    if not ok then
+      local flags = pcall(require, "llaunchd_flags") and require("llaunchd_flags") or {}
+      if not (opts and opts.unsafe_relative) and not flags.unsafe_relative then
+        return false, verr
+      end
+    end
   end
   return backend.load_unit(name, config)
 end

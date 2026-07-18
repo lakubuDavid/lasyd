@@ -75,3 +75,22 @@ test.group("launchd.resolve_config errors", function()
     })
   end, "invalid Restart")
 end)
+
+test.group("launchd.validate_program", function()
+  -- absolute path: OK
+  local ok = launchd.validate_program({ Program = "/usr/bin/echo hi" })
+  test.ok(ok, "absolute path passes")
+
+  -- relative ./path: OK
+  ok = launchd.validate_program({ Program = "./mytool" })
+  test.ok(ok, "relative ./path passes")
+
+  -- bare command with Env.PATH: OK
+  ok = launchd.validate_program({ Program = "echo hi", Env = { PATH = "/usr/bin" } })
+  test.ok(ok, "bare command with PATH passes")
+
+  -- bare command no PATH: FAIL
+  local pass, err = launchd.validate_program({ Program = "echo hi" })
+  test.equal(pass, false, "bare command without PATH fails")
+  test.ok(err:find("bare command"), "error mentions bare command")
+end)
