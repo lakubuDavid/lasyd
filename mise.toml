@@ -5,7 +5,7 @@ lua = "latest"
 run = "lua test/run.lua"
 
 [tasks.install]
-run = "sudo ln -sf /Users/davidlakubu/Code/Lua/lasyd/bin/lasyd /usr/local/bin/lasyd"
+run = "sudo ln -sf ./bin/lasyd /usr/local/bin/lasyd"
 
 [tasks.uninstall]
 run = "sudo rm -f /usr/local/bin/lasyd"

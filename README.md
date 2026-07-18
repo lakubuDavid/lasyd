@@ -2,7 +2,31 @@
 
 Lua-powered service manager for macOS (launchd) and Linux (systemd).
 
-Write service definitions as Lua tables. Get native init system units.
+> Why?
+
+I was working on some data analysis project, and had to fetch some real time data periodically.
+`cron` seems to never work on my device, I have recently started playing with` systemd` on my Debian machine and I don't like XML (plist) so…yeah.
+
+I use a MacBook, I have a Debian home-server and do backend,
+
+Moving configs between the two is annoying, I am trying to use the same tools on all devices more often,
+I switched to `mise` for part of my package management where possible to have the same setups on all devices.
+I can just move my `mise.toml` file and install my tools like helix, lazigit ,Yazi ,Zellij ,…
+
+This allows me to write service definitions as Lua tables, and get native init system units.
+
+I like Lua, If I can move all my configs to Lua I will, but I can't (yet)
+
+So this is a start.
+
+> Did you use …?
+
+Yes, yes I did AI, I already had my config schema in mind, Lua is a great DDL so I wrote down my ideas, opened pi and started prompting one command at the time.
+
+I started with table -> plist mapping,
+then wrapping `launchd`,
+then I had the idea of abstracting `launchd` as a backend to later add `systemd`,
+pi implemented the `systemd` part, I still need to test it but it works for me for now.
 
 ## Install
 
