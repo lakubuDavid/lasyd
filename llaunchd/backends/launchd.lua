@@ -102,11 +102,17 @@ function M.resolve_config(config)
   out.Label = config.Label
 
   if config.Program then
-    local args = {}
-    for word in config.Program:gmatch("%S+") do
-      args[#args + 1] = word
+    if type(config.Program) == "table" then
+      -- Program is already an array
+      out.ProgramArguments = config.Program
+    else
+      -- Program is a string, split on whitespace
+      local args = {}
+      for word in config.Program:gmatch("%S+") do
+        args[#args + 1] = word
+      end
+      out.ProgramArguments = args
     end
-    out.ProgramArguments = args
   elseif config.ProgramArguments then
     out.ProgramArguments = config.ProgramArguments
   else

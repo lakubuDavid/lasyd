@@ -102,3 +102,22 @@ test.group("launchd.validate_program", function()
   test.equal(pass, false, "bare command without PATH fails")
   test.ok(err:find("bare command"), "error mentions bare command")
 end)
+
+test.group("launchd.resolve_config Program as table", function()
+  -- Program as table
+  local cfg = launchd.resolve_config({
+    Label = "com.test.table",
+    Program = { "/usr/bin/mytool", "--flag", "arg with space" },
+  })
+  test.equal(cfg.ProgramArguments[1], "/usr/bin/mytool", "first arg")
+  test.equal(cfg.ProgramArguments[2], "--flag", "second arg")
+  test.equal(cfg.ProgramArguments[3], "arg with space", "arg with space preserved")
+
+  -- Program as string (existing behavior)
+  cfg = launchd.resolve_config({
+    Label = "com.test.string",
+    Program = "/usr/bin/echo hello",
+  })
+  test.equal(cfg.ProgramArguments[1], "/usr/bin/echo", "string split first")
+  test.equal(cfg.ProgramArguments[2], "hello", "string split second")
+end)
