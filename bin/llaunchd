@@ -53,19 +53,24 @@ package.path = llaunchd_dir .. "?.lua;" ..
 function defineAgent(config) return config end
 
 -- Parse flags
-local unsafe_relative = false
+local flags = {
+  unsafe_relative = false,
+  dry_run = false,
+}
 local clean_args = {}
 for i = 1, #arg do
   if arg[i] == "--unsafe-relative-path" then
-    unsafe_relative = true
+    flags.unsafe_relative = true
+  elseif arg[i] == "--dry-run" or arg[i] == "-n" then
+    flags.dry_run = true
   else
     clean_args[#clean_args + 1] = arg[i]
   end
 end
 
--- Pass flag to service module
+-- Pass flags to service module
 package.preload["llaunchd_flags"] = function()
-  return { unsafe_relative = unsafe_relative }
+  return flags
 end
 
 -- Parse command
