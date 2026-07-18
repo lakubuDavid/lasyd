@@ -1,0 +1,75 @@
+#!/usr/bin/env lua
+
+-- llaunchd CLI entry point
+-- Resolve the real path (follows symlinks) and add to package.path
+
+local function script_path()
+  local info = debug.getinfo(1, "S")
+  local path = info.source:match("^@(.+)$")
+  if not path then return "." end
+  -- Resolve symlinks
+  local resolved = io.popen('readlink -f "' .. path .. '"'):read("*a")
+  if resolved then
+    resolved = resolved:gsub("\n+$", "")
+    if resolved ~= "" then path = resolved end
+  end
+  return path:match("(.*/)") or "."
+end
+
+local self_dir = script_path()
+local project_root = self_dir:match("(.*/)[^/]+/$") or self_dir
+
+-- Add both project root and self_dir/../llaunchd to package.path
+package.path = project_root .. "?.lua;" ..
+               project_root .. "?/init.lua;" ..
+               project_root .. "../llaunchd/?.lua;" ..
+               project_root .. "../llaunchd/?/init.lua;" ..
+               self_dir .. "../llaunchd/?.lua;" ..
+               self_dir .. "../llaunchd/?/init.lua;" ..
+               package.path
+
+-- Define the global defineAgent function for service files
+---@class AgentConfig
+---@field Label string
+---@field Program string
+---@field RunAtLoad? boolean
+---@field Restart? "always"|"on-failure"|"never"
+---@field StdOut? string
+---@field StdErr? string
+---@field Env? table<string, string>
+---@field KeepAlive? boolean|table
+---@field WatchPaths? string[]
+---@field WorkingDirectory? string
+---@field ProcessType? "Standard"|"Background"|"Adaptive"
+---@field SoftResourceLimits? table
+---@field HardResourceLimits? table
+---@field TimeOut? number
+---@field ExitTimeOut? number
+
+--- Define a launchd agent configuration.
+--- Returns the config unchanged — exists for LSP type checking.
+---@param config AgentConfig
+---@return AgentConfig
+function defineAgent(config) return config end
+
+-- Parse command and arguments
+local command = arg[1]
+local cmd_arg = arg[2]
+
+if not command or command == "help" or command == "--help" or command == "-h" then
+  local ll = require("llaunchd")
+  ll.usage()
+  os.exit(0)
+end
+
+local ll = require("llaunchd")
+
+local cmd = ll.commands[command]
+if not cmd then
+  io.stderr:write("Unknown command: " .. command .. "\n")
+  io.stderr:write("Run 'llaunchd help' for usage.\n")
+  os.exit(1)
+end
+
+local exit_code = cmd.run(cmd_arg)
+os.exit(exit_code or 0)

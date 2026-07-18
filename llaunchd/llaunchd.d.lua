@@ -1,0 +1,43 @@
+-- llaunchd.d.lua
+-- Type definitions for llaunchd service files.
+-- Add to your LSP workspace.library to get type checking and autocomplete.
+--
+-- VS Code (.vscode/settings.json):
+--   "Lua.workspace.library": ["~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua"]
+--
+-- Neovim:
+--   require('lspconfig').lua_ls.setup {
+--     settings = { Lua = { workspace = { library = {
+--       vim.fn.expand("~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua")
+--     } } } }
+--   }
+
+---@class AgentConfig
+---@field Label string                      reverse-DNS identifier, e.g. "com.example.myagent"
+---@field Program string                    command + args as a single string
+---@field ProgramArguments? string[]        command as array (alternative to Program)
+---@field RunAtLoad? boolean                start at boot (default: false)
+---@field Restart? "always"|"on-failure"|"never"  maps to KeepAlive conditions
+---@field StdOut? string                    path to stdout log file
+---@field StdErr? string                    path to stderr log file
+---@field Env? table<string, string>        environment variables
+---@field KeepAlive? boolean|AgentKeepAlive  raw launchd KeepAlive (overrides Restart)
+---@field WatchPaths? string[]              restart when these paths change
+---@field WorkingDirectory? string          working directory for the process
+---@field ProcessType? "Standard"|"Background"|"Adaptive"
+---@field SoftResourceLimits? table         soft resource limits
+---@field HardResourceLimits? table         hard resource limits
+---@field TimeOut? number                   graceful shutdown timeout (seconds)
+---@field ExitTimeOut? number               kill timeout after SIGTERM (seconds)
+
+---@class AgentKeepAlive
+---@field SuccessfulExit? boolean
+---@field Crashed? boolean
+---@field IdleExit? boolean
+
+--- Define a launchd agent configuration.
+--- Returns the config unchanged — exists purely for LSP type checking.
+---
+--- @param config AgentConfig
+--- @return AgentConfig
+function defineAgent(config) return config end
