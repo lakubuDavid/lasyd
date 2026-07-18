@@ -15,6 +15,7 @@ M.commands = {
   install = require("commands.install"),
   load    = require("commands.load"),
   unload  = require("commands.unload"),
+  restart = require("commands.restart"),
   trigger = require("commands.trigger"),
   log     = require("commands.log"),
   errlog  = require("commands.errlog"),
@@ -32,6 +33,7 @@ Usage:
   llaunchd install [name]        Generate unit file from service definition
   llaunchd load <name>           Load service into init system
   llaunchd unload <name>         Unload service from init system
+  llaunchd restart <name>        Restart service (unload+load)
   llaunchd trigger <name>        Manually trigger a service (launchctl start)
   llaunchd log <name>            Tail service log file
   llaunchd errlog                Tail error log (~/.llaunchd/logs/llaunchd.error.log)
