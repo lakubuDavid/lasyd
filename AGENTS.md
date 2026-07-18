@@ -7,7 +7,7 @@
 ## Structure
 
 ```
-bin/lasyd              # Entry point (shebang, symlinked to ~/tools/lasyd)
+bin/lasyd              # Entry point (shebang, symlinked to /usr/local/bin/lasyd)
 lasyd/
 ├── init.lua              # Core exports
 ├── backend.lua           # Backend interface contract
@@ -24,8 +24,8 @@ lasyd/
 
 - Always use `defineAgent {}` (no parens) in service file examples
 - Backend interface: `services_dir, init_dir, list_services, load_service, resolve_config, install_unit, uninstall_unit, load_unit, unload_unit, unit_status, log_files`
-- Run tests via `~/tools/lasyd <command>` after changes
-- Symlink: `~/tools/lasyd` → `~/Code/Lua/lasyd/bin/lasyd`
+- Run tests via `/usr/local/bin/lasyd <command>` after changes
+- Symlink: `/usr/local/bin/lasyd` → `~/Code/Lua/lasyd/bin/lasyd`
 - Services live in `~/.lasyd/services/*.lua`
 - Generated units go to `~/Library/LaunchAgents/` (launchd) or `/etc/systemd/system/` (systemd)
 - Use `todo` CLI (not todo_manager) for task tracking
