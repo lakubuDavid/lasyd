@@ -1,9 +1,9 @@
--- llaunchd.d.lua
--- Type definitions for llaunchd service files.
+-- lasyd.d.lua
+-- Type definitions for lasyd service files.
 -- Add to your LSP workspace.library for autocomplete on defineAgent {}.
 --
--- VS Code: "Lua.workspace.library": ["~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua"]
--- Neovim:  vim.fn.expand("~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua")
+-- VS Code: "Lua.workspace.library": ["~/Code/Lua/lasyd/lasyd/lasyd.d.lua"]
+-- Neovim:  vim.fn.expand("~/Code/Lua/lasyd/lasyd/lasyd.d.lua")
 
 ---@class AgentConfig
 ---@field Label string                      reverse-DNS identifier (required)

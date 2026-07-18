@@ -1,4 +1,4 @@
--- llaunchd/backends/systemd.lua
+-- lasyd/backends/systemd.lua
 -- systemd backend for Linux
 
 local M = {}
@@ -8,7 +8,7 @@ local HOME = os.getenv("HOME")
 
 ---@return string
 function M.services_dir()
-  return HOME .. "/.llaunchd/services"
+  return HOME .. "/.lasyd/services"
 end
 
 ---@return string
@@ -60,7 +60,7 @@ function M.load_service(name)
   return result, nil
 end
 
---- Translate llaunchd config to systemd unit format
+--- Translate lasyd config to systemd unit format
 ---@param config table
 ---@return table
 function M.resolve_config(config)

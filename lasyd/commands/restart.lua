@@ -1,4 +1,4 @@
--- llaunchd/commands/restart.lua
+-- lasyd/commands/restart.lua
 -- Restart a service: unload then load (or daemon-reload + restart on systemd)
 
 local service = require("service")
@@ -9,7 +9,7 @@ local M = {}
 ---@return number exit_code
 function M.run(name)
   if not name then
-    io.stderr:write("usage: llaunchd restart <name>\n")
+    io.stderr:write("usage: lasyd restart <name>\n")
     return 1
   end
 

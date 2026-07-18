@@ -1,4 +1,4 @@
--- llaunchd/commands/errlog.lua
+-- lasyd/commands/errlog.lua
 -- Tail the centralized error log
 
 local log = require("log")

@@ -5,13 +5,13 @@ lua = "latest"
 run = "lua test/run.lua"
 
 [tasks.install]
-run = "sudo ln -sf /Users/davidlakubu/Code/Lua/llaunchd/bin/llaunchd /usr/local/bin/llaunchd"
+run = "sudo ln -sf /Users/davidlakubu/Code/Lua/lasyd/bin/lasyd /usr/local/bin/lasyd"
 
 [tasks.uninstall]
-run = "sudo rm -f /usr/local/bin/llaunchd"
+run = "sudo rm -f /usr/local/bin/lasyd"
 
 [tasks.list]
-run = "bin/llaunchd list"
+run = "bin/lasyd list"
 
 [tasks.help]
-run = "bin/llaunchd help"
+run = "bin/lasyd help"

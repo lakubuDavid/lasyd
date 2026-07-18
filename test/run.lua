@@ -5,8 +5,8 @@ local script_dir = arg[0]:match("(.*/)" ) or "./"
 local project_root = script_dir .. "../"
 
 package.path = script_dir .. "?.lua;" ..
-               project_root .. "llaunchd/?.lua;" ..
-               project_root .. "llaunchd/?/init.lua;" ..
+               project_root .. "lasyd/?.lua;" ..
+               project_root .. "lasyd/?/init.lua;" ..
                package.path
 
 local test = require("test")

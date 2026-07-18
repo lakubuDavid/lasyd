@@ -1,4 +1,4 @@
--- llaunchd/backends/launchd.lua
+-- lasyd/backends/launchd.lua
 -- launchd backend for macOS
 
 local plist = require("plist")
@@ -10,7 +10,7 @@ local HOME = os.getenv("HOME")
 
 ---@return string
 function M.services_dir()
-  return HOME .. "/.llaunchd/services"
+  return HOME .. "/.lasyd/services"
 end
 
 ---@return string

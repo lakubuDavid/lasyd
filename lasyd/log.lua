@@ -1,11 +1,11 @@
--- llaunchd/log.lua
--- Centralized error logging to /etc/llaunchd/llaunchd.error.log
+-- lasyd/log.lua
+-- Centralized error logging to /etc/lasyd/lasyd.error.log
 
 local M = {}
 
 local HOME = os.getenv("HOME")
-local LOG_DIR = HOME .. "/.llaunchd/logs"
-local LOG_FILE = LOG_DIR .. "/llaunchd.error.log"
+local LOG_DIR = HOME .. "/.lasyd/logs"
+local LOG_FILE = LOG_DIR .. "/lasyd.error.log"
 
 --- Ensure log directory exists
 local function ensure_dir()

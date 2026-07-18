@@ -1,4 +1,4 @@
-# llaunchd
+# lasyd
 
 Lua-powered service manager for macOS (launchd) and Linux (systemd).
 
@@ -7,26 +7,26 @@ Write service definitions as Lua tables, get native init system units.
 ## Install
 
 ```bash
-# Already symlinked at ~/tools/llaunchd
+# Already symlinked at ~/usr/local/bin/lasyd
 # Or manually:
-ln -s ~/Code/Lua/llaunchd/bin/llaunchd ~/tools/llaunchd
+ln -s ~/Code/Lua/lasyd/bin/lasyd ~/usr/lcoal/bin/lasyd
 ```
 
 ## Usage
 
 ```
-llaunchd list                  # List all services
-llaunchd status <name>         # Show service status
-llaunchd install [name]        # Generate unit file (all or one)
-llaunchd load <name>           # Load into init system
-llaunchd unload <name>         # Unload from init system
-llaunchd log <name>            # Tail log file
-llaunchd help                  # Show help
+lasyd list                  # List all services
+lasyd status <name>         # Show service status
+lasyd install [name]        # Generate unit file (all or one)
+lasyd load <name>           # Load into init system
+lasyd unload <name>         # Unload from init system
+lasyd log <name>            # Tail log file
+lasyd help                  # Show help
 ```
 
 ## Service Files
 
-Place `.lua` files in `~/.llaunchd/services/`:
+Place `.lua` files in `~/.lasyd/services/`:
 
 ```lua
 return defineAgent {
@@ -43,7 +43,7 @@ return defineAgent {
 
 Auto-detected: macOS → launchd, Linux → systemd.
 
-Override with env: `LLAUNCHD_BACKEND=systemd llaunchd list`
+Override with env: `LASYD_BACKEND=systemd lasyd list`
 
 ### launchd (macOS)
 
@@ -77,7 +77,7 @@ Generated: `/etc/systemd/system/<Label>.service`
 
 ```json
 // .vscode/settings.json
-{ "Lua.workspace.library": ["~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua"] }
+{ "Lua.workspace.library": ["~/Code/Lua/lasyd/lasyd/lasyd.d.lua"] }
 ```
 
 ## Testing
@@ -89,8 +89,8 @@ lua test/run.lua
 ## Project Structure
 
 ```
-bin/llaunchd              # CLI entry point
-llaunchd/
+bin/lasyd              # CLI entry point
+lasyd/
 ├── init.lua              # Core exports
 ├── backend.lua           # Backend interface contract
 ├── backends/
@@ -98,7 +98,7 @@ llaunchd/
 │   └── systemd.lua       # Linux implementation
 ├── service.lua           # Service file loader + backend delegation
 ├── plist.lua             # XML plist serializer
-├── llaunchd.d.lua        # LSP type defs
+├── lasyd.d.lua        # LSP type defs
 └── commands/             # CLI subcommands
 test/
 ├── run.lua               # Test runner

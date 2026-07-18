@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 
--- llaunchd CLI entry point
+-- lasyd CLI entry point
 
 local function script_path()
   local info = debug.getinfo(1, "S")
@@ -16,13 +16,13 @@ end
 
 local self_dir = script_path()
 local project_root = self_dir:match("(.*/)[^/]+/$") or self_dir
-local llaunchd_dir = project_root .. "llaunchd/"
+local lasyd_dir = project_root .. "lasyd/"
 
 -- Add paths so require("service"), require("plist") etc. work directly
-package.path = llaunchd_dir .. "?.lua;" ..
-               llaunchd_dir .. "?/init.lua;" ..
-               llaunchd_dir .. "backends/?.lua;" ..
-               llaunchd_dir .. "commands/?.lua;" ..
+package.path = lasyd_dir .. "?.lua;" ..
+               lasyd_dir .. "?/init.lua;" ..
+               lasyd_dir .. "backends/?.lua;" ..
+               lasyd_dir .. "commands/?.lua;" ..
                project_root .. "?.lua;" ..
                project_root .. "?/init.lua;" ..
                package.path
@@ -69,7 +69,7 @@ for i = 1, #arg do
 end
 
 -- Pass flags to service module
-package.preload["llaunchd_flags"] = function()
+package.preload["lasyd_flags"] = function()
   return flags
 end
 
@@ -78,23 +78,23 @@ local command = clean_args[1]
 local cmd_arg = clean_args[2]
 
 if not command or command == "help" or command == "--help" or command == "-h" then
-  local ll = require("llaunchd")
+  local ll = require("lasyd")
   ll.usage()
   os.exit(0)
 end
 
 -- Check for backend override via env
 if os.getenv("LLAUNCHD_BACKEND") then
-  local ll = require("llaunchd")
+  local ll = require("lasyd")
   ll.service.init(os.getenv("LLAUNCHD_BACKEND"))
 end
 
-local ll = require("llaunchd")
+local ll = require("lasyd")
 
 local cmd = ll.commands[command]
 if not cmd then
   io.stderr:write("Unknown command: " .. command .. "\n")
-  io.stderr:write("Run 'llaunchd help' for usage.\n")
+  io.stderr:write("Run 'lasyd help' for usage.\n")
   os.exit(1)
 end
 

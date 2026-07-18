@@ -1,4 +1,4 @@
--- llaunchd/commands/load.lua
+-- lasyd/commands/load.lua
 
 local service = require("service")
 local log = require("log")
@@ -9,7 +9,7 @@ local M = {}
 ---@return number exit_code
 function M.run(name)
   if not name then
-    io.stderr:write("usage: llaunchd load <name>\n")
+    io.stderr:write("usage: lasyd load <name>\n")
     return 1
   end
 

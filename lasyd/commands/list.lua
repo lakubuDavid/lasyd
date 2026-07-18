@@ -1,4 +1,4 @@
--- llaunchd/commands/list.lua
+-- lasyd/commands/list.lua
 
 local service = require("service")
 

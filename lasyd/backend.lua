@@ -1,4 +1,4 @@
--- llaunchd/backend.lua
+-- lasyd/backend.lua
 -- Backend interface — defines the contract that launchd/systemd backends must implement.
 
 local M = {}
@@ -40,7 +40,7 @@ end
 ---@param name string  "launchd" or "systemd"
 ---@return Backend backend
 function M.load(name)
-  local ok, backend = pcall(require, "llaunchd.backends." .. name)
+  local ok, backend = pcall(require, "lasyd.backends." .. name)
   if not ok then
     error("failed to load backend '" .. name .. "': " .. tostring(backend))
   end

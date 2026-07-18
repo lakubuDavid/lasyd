@@ -1,4 +1,4 @@
--- llaunchd/commands/trigger.lua
+-- lasyd/commands/trigger.lua
 -- Manually trigger a service via launchctl start
 
 local service = require("service")
@@ -9,7 +9,7 @@ local M = {}
 ---@return number exit_code
 function M.run(name)
   if not name then
-    io.stderr:write("usage: llaunchd trigger <name>\n")
+    io.stderr:write("usage: lasyd trigger <name>\n")
     return 1
   end
 

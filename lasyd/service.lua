@@ -1,4 +1,4 @@
--- llaunchd/service.lua
+-- lasyd/service.lua
 -- Backend-agnostic service manager — delegates to the active backend.
 
 local backend_mod = require("backend")
@@ -83,7 +83,7 @@ function M.install_unit(name, opts)
   if backend.validate_program then
     local ok, verr = backend.validate_program(config)
     if not ok then
-      local flags = pcall(require, "llaunchd_flags") and require("llaunchd_flags") or {}
+      local flags = pcall(require, "lasyd_flags") and require("lasyd_flags") or {}
       if not (opts and opts.unsafe_relative) and not flags.unsafe_relative then
         return false, verr
       end
@@ -116,7 +116,7 @@ function M.load_unit(name, opts)
   if backend.validate_program then
     local ok, verr = backend.validate_program(config)
     if not ok then
-      local flags = pcall(require, "llaunchd_flags") and require("llaunchd_flags") or {}
+      local flags = pcall(require, "lasyd_flags") and require("lasyd_flags") or {}
       if not (opts and opts.unsafe_relative) and not flags.unsafe_relative then
         return false, verr
       end

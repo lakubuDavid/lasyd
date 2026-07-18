@@ -1,4 +1,4 @@
--- llaunchd/plist.lua
+-- lasyd/plist.lua
 -- XML plist serializer (Apple Property List 1.0)
 
 local M = {}

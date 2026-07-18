@@ -1,4 +1,4 @@
--- llaunchd/commands/install.lua
+-- lasyd/commands/install.lua
 
 local service = require("service")
 local log = require("log")
@@ -8,7 +8,7 @@ local M = {}
 ---@param name string|nil  service name, or nil to install all
 ---@return number exit_code
 function M.run(name)
-  local flags = pcall(require, "llaunchd_flags") and require("llaunchd_flags") or {}
+  local flags = pcall(require, "lasyd_flags") and require("lasyd_flags") or {}
   local dry_run = flags.dry_run
 
   local to_install = {}

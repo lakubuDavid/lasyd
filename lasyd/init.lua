@@ -1,4 +1,4 @@
--- llaunchd/init.lua
+-- lasyd/init.lua
 -- Core library — exports all public APIs
 
 local M = {}
@@ -25,19 +25,19 @@ M.commands = {
 function M.usage()
   local backend_name = M.service.get_backend().name
   io.write(string.format([[
-llaunchd — launchd/systemd services in Lua (backend: %s)
+lasyd — launchd/systemd services in Lua (backend: %s)
 
 Usage:
-  llaunchd list                  List all services
-  llaunchd status <name>         Show service status
-  llaunchd install [name]        Generate unit file from service definition
-  llaunchd load <name>           Load service into init system
-  llaunchd unload <name>         Unload service from init system
-  llaunchd restart <name>        Restart service (unload+load)
-  llaunchd trigger <name>        Manually trigger a service (launchctl start)
-  llaunchd log <name>            Tail service log file
-  llaunchd errlog                Tail error log (~/.llaunchd/logs/llaunchd.error.log)
-  llaunchd help                  Show this help
+  lasyd list                  List all services
+  lasyd status <name>         Show service status
+  lasyd install [name]        Generate unit file from service definition
+  lasyd load <name>           Load service into init system
+  lasyd unload <name>         Unload service from init system
+  lasyd restart <name>        Restart service (unload+load)
+  lasyd trigger <name>        Manually trigger a service (launchctl start)
+  lasyd log <name>            Tail service log file
+  lasyd errlog                Tail error log (~/.lasyd/logs/lasyd.error.log)
+  lasyd help                  Show this help
 
 Backend:
   %s (%s)

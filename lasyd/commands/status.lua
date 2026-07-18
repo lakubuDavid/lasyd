@@ -1,4 +1,4 @@
--- llaunchd/commands/status.lua
+-- lasyd/commands/status.lua
 
 local service = require("service")
 local log = require("log")
@@ -9,7 +9,7 @@ local M = {}
 ---@return number exit_code
 function M.run(name)
   if not name then
-    io.stderr:write("usage: llaunchd status <name>\n")
+    io.stderr:write("usage: lasyd status <name>\n")
     return 1
   end
 
@@ -32,7 +32,7 @@ function M.run(name)
       io.write("Unit:    installed\n")
     end
   else
-    io.write("Unit:    NOT installed (run: llaunchd install " .. name .. ")\n")
+    io.write("Unit:    NOT installed (run: lasyd install " .. name .. ")\n")
   end
 
   if st.loaded then
