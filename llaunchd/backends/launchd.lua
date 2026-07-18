@@ -204,7 +204,10 @@ end
 ---@param name string
 ---@param config table
 ---@return table status
-function M.unit_status(name)
+function M.unit_status(name, config)
+  if not config then
+    return { Label = name, installed = false, loaded = false }
+  end
   local label = config.Label or name
   local plist_path = M.init_dir() .. "/" .. label .. ".plist"
 
