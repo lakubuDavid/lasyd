@@ -5,7 +5,10 @@ lua = "latest"
 run = "lua test/run.lua"
 
 [tasks.install]
-run = "ln -sf /Users/davidlakubu/Code/Lua/llaunchd/bin/llaunchd /Users/davidlakubu/tools/llaunchd"
+run = "sudo ln -sf /Users/davidlakubu/Code/Lua/llaunchd/bin/llaunchd /usr/local/bin/llaunchd"
+
+[tasks.uninstall]
+run = "sudo rm -f /usr/local/bin/llaunchd"
 
 [tasks.list]
 run = "bin/llaunchd list"
