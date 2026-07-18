@@ -1,21 +1,25 @@
 # llaunchd
 
-Lua-powered launchd service manager for macOS.
+Lua-powered service manager for macOS (launchd) and Linux (systemd).
 
-Write service definitions as Lua tables, get launchd plists.
+Write service definitions as Lua tables, get native init system units.
 
 ## Install
 
-Already symlinked at `~/tools/llaunchd`.
+```bash
+# Already symlinked at ~/tools/llaunchd
+# Or manually:
+ln -s ~/Code/Lua/llaunchd/bin/llaunchd ~/tools/llaunchd
+```
 
 ## Usage
 
 ```
 llaunchd list                  # List all services
 llaunchd status <name>         # Show service status
-llaunchd install [name]        # Generate plist (all or one)
-llaunchd load <name>           # Load into launchctl
-llaunchd unload <name>         # Unload from launchctl
+llaunchd install [name]        # Generate unit file (all or one)
+llaunchd load <name>           # Load into init system
+llaunchd unload <name>         # Unload from init system
 llaunchd log <name>            # Tail log file
 llaunchd help                  # Show help
 ```
@@ -25,7 +29,6 @@ llaunchd help                  # Show help
 Place `.lua` files in `~/.llaunchd/services/`:
 
 ```lua
--- ~/.llaunchd/services/myagent.lua
 return defineAgent {
     Label   = "com.example.myagent",
     Program = "/usr/local/bin/mytool --flag",
@@ -36,53 +39,69 @@ return defineAgent {
 }
 ```
 
-Then:
-```bash
-llaunchd install        # generate plists
-llaunchd load myagent   # load into launchctl
-```
+## Backend
+
+Auto-detected: macOS → launchd, Linux → systemd.
+
+Override with env: `LLAUNCHD_BACKEND=systemd llaunchd list`
+
+### launchd (macOS)
+
+| Key | Maps To |
+|-----|---------|
+| `Label` | `Label` |
+| `Program` | `ProgramArguments` (auto-split) |
+| `RunAtLoad` | `RunAtLoad` |
+| `Restart` | `KeepAlive` shorthand |
+| `StdOut` | `StandardOutPath` |
+| `StdErr` | `StandardErrorPath` |
+| `Env` | `EnvironmentVariables` |
+
+Generated: `~/Library/LaunchAgents/<Label>.plist`
+
+### systemd (Linux)
+
+| Key | Maps To |
+|-----|---------|
+| `Label` | unit filename |
+| `Program` | `ExecStart` |
+| `Restart` | `Restart` |
+| `WorkingDirectory` | `WorkingDirectory` |
+| `Env` | `Environment` |
+| `Description` | `[Unit] Description` |
+| `WantedBy` | `[Install] WantedBy` |
+
+Generated: `/etc/systemd/system/<Label>.service`
 
 ## LSP Type Checking
 
-Add the definition file to your editor:
-
-**VS Code** (`.vscode/settings.json`):
 ```json
-{
-  "Lua.workspace.library": [
-    "~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua"
-  ]
-}
+// .vscode/settings.json
+{ "Lua.workspace.library": ["~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua"] }
 ```
 
-**Neovim**:
-```lua
-require('lspconfig').lua_ls.setup {
-  settings = { Lua = { workspace = { library = {
-    vim.fn.expand("~/Code/Lua/llaunchd/llaunchd/llaunchd.d.lua")
-  } } } }
-}
+## Testing
+
+```bash
+lua test/run.lua
 ```
 
-Then `defineAgent {}` provides autocomplete and type checking.
+## Project Structure
 
-## Config Keys
-
-| Key | Maps To | Description |
-|-----|---------|-------------|
-| `Label` | `Label` | Reverse-DNS identifier (required) |
-| `Program` | `ProgramArguments` | Command as string, auto-split |
-| `ProgramArguments` | `ProgramArguments` | Command as array (alternative) |
-| `RunAtLoad` | `RunAtLoad` | Start at boot |
-| `Restart` | `KeepAlive` | `"always"`, `"on-failure"`, `"never"` |
-| `KeepAlive` | `KeepAlive` | Raw launchd KeepAlive (overrides Restart) |
-| `StdOut` | `StandardOutPath` | Stdout log path |
-| `StdErr` | `StandardErrorPath` | Stderr log path |
-| `Env` | `EnvironmentVariables` | Environment variables |
-| `WatchPaths` | `WatchPaths` | Restart on path changes |
-| `WorkingDirectory` | `WorkingDirectory` | Working directory |
-| `ProcessType` | `ProcessType` | `"Standard"`, `"Background"`, `"Adaptive"` |
-| `TimeOut` | `TimeOut` | Graceful shutdown timeout |
-| `ExitTimeOut` | `ExitTimeOut` | Kill timeout after SIGTERM |
-
-Any other keys are passed through as raw launchd plist keys.
+```
+bin/llaunchd              # CLI entry point
+llaunchd/
+├── init.lua              # Core exports
+├── backend.lua           # Backend interface contract
+├── backends/
+│   ├── launchd.lua       # macOS implementation
+│   └── systemd.lua       # Linux implementation
+├── service.lua           # Service file loader + backend delegation
+├── plist.lua             # XML plist serializer
+├── llaunchd.d.lua        # LSP type defs
+└── commands/             # CLI subcommands
+test/
+├── run.lua               # Test runner
+├── test.lua              # Minimal test framework
+└── test_*.lua            # Test files
+```
