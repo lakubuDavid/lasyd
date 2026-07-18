@@ -1,7 +1,6 @@
 -- llaunchd/commands/list.lua
--- List all services defined in ~/.llaunchd/services/
 
-local service = require("llaunchd.service")
+local service = require("service")
 
 local M = {}
 
@@ -10,8 +9,6 @@ function M.run()
 
   if #services == 0 then
     io.write("No services found in " .. service.services_dir() .. "\n")
-    io.write("Create a service: echo 'return defineAgent { Label=\"com.example.myagent\", Program=\"/usr/bin/mytool\" }' > " ..
-             service.services_dir() .. "/myagent.lua\n")
     return 0
   end
 

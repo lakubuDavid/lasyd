@@ -4,35 +4,40 @@
 local M = {}
 
 -- Sub-modules
-M.plist   = require("llaunchd.plist")
-M.service = require("llaunchd.service")
+M.plist   = require("plist")
+M.service = require("service")
+M.backend = require("backend")
 
 -- Commands
 M.commands = {
-  list    = require("llaunchd.commands.list"),
-  status  = require("llaunchd.commands.status"),
-  install = require("llaunchd.commands.install"),
-  load    = require("llaunchd.commands.load"),
-  unload  = require("llaunchd.commands.unload"),
-  log     = require("llaunchd.commands.log"),
+  list    = require("commands.list"),
+  status  = require("commands.status"),
+  install = require("commands.install"),
+  load    = require("commands.load"),
+  unload  = require("commands.unload"),
+  log     = require("commands.log"),
 }
 
 ---Print usage help
 function M.usage()
-  io.write([[
-llaunchd — launchd services in Lua
+  local backend_name = M.service.get_backend().name
+  io.write(string.format([[
+llaunchd — launchd/systemd services in Lua (backend: %s)
 
 Usage:
   llaunchd list                  List all services
   llaunchd status <name>         Show service status
-  llaunchd install [name]        Generate plist from service definition
-  llaunchd load <name>           Load service into launchctl
-  llaunchd unload <name>         Unload service from launchctl
+  llaunchd install [name]        Generate unit file from service definition
+  llaunchd load <name>           Load service into init system
+  llaunchd unload <name>         Unload service from init system
   llaunchd log <name>            Tail service log file
   llaunchd help                  Show this help
 
+Backend:
+  %s (%s)
+
 Service files live in:
-  ]] .. M.service.services_dir() .. [[/*.lua
+  %s/*.lua
 
 Each file must return a table via defineAgent {}:
   return defineAgent {
@@ -43,7 +48,7 @@ Each file must return a table via defineAgent {}:
     StdOut  = "/tmp/myagent.log",
     Env     = { PATH = "/usr/local/bin:/usr/bin:/bin" },
   }
-]])
+]], backend_name, backend_name, M.service.services_dir(), M.service.services_dir()))
 end
 
 return M

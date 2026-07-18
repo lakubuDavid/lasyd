@@ -1,7 +1,6 @@
 -- llaunchd/commands/unload.lua
--- Unload a service from launchctl
 
-local service = require("llaunchd.service")
+local service = require("service")
 
 local M = {}
 
@@ -13,24 +12,13 @@ function M.run(name)
     return 1
   end
 
-  -- Check service exists
-  local config, err = service.load_service(name)
-  if not config then
-    io.stderr:write("error: " .. (err or "unknown") .. "\n")
-    return 1
-  end
-
-  local label = config.Label or name
-  local plist_path = service.launch_agents_dir() .. "/" .. label .. ".plist"
-
-  -- Unload from launchctl
-  io.write("Unloading " .. label .. " ...\n")
-  local ret = os.execute('launchctl unload "' .. plist_path .. '"')
-  if ret == 0 or ret == true then
-    io.write("Unloaded " .. label .. "\n")
+  io.write("Unloading " .. name .. " ...\n")
+  local ok, err = service.unload_unit(name)
+  if ok then
+    io.write("Unloaded " .. name .. "\n")
     return 0
   else
-    io.stderr:write("Failed to unload " .. label .. "\n")
+    io.stderr:write("Failed to unload " .. name .. ": " .. (err or "unknown") .. "\n")
     return 1
   end
 end

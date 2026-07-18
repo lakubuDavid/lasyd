@@ -1,13 +1,11 @@
 #!/usr/bin/env lua
 
 -- llaunchd CLI entry point
--- Resolve the real path (follows symlinks) and add to package.path
 
 local function script_path()
   local info = debug.getinfo(1, "S")
   local path = info.source:match("^@(.+)$")
   if not path then return "." end
-  -- Resolve symlinks
   local resolved = io.popen('readlink -f "' .. path .. '"'):read("*a")
   if resolved then
     resolved = resolved:gsub("\n+$", "")
@@ -18,17 +16,18 @@ end
 
 local self_dir = script_path()
 local project_root = self_dir:match("(.*/)[^/]+/$") or self_dir
+local llaunchd_dir = project_root .. "llaunchd/"
 
--- Add both project root and self_dir/../llaunchd to package.path
-package.path = project_root .. "?.lua;" ..
+-- Add paths so require("service"), require("plist") etc. work directly
+package.path = llaunchd_dir .. "?.lua;" ..
+               llaunchd_dir .. "?/init.lua;" ..
+               llaunchd_dir .. "backends/?.lua;" ..
+               llaunchd_dir .. "commands/?.lua;" ..
+               project_root .. "?.lua;" ..
                project_root .. "?/init.lua;" ..
-               project_root .. "../llaunchd/?.lua;" ..
-               project_root .. "../llaunchd/?/init.lua;" ..
-               self_dir .. "../llaunchd/?.lua;" ..
-               self_dir .. "../llaunchd/?/init.lua;" ..
                package.path
 
--- Define the global defineAgent function for service files
+-- Define global defineAgent for service files
 ---@class AgentConfig
 ---@field Label string
 ---@field Program string
@@ -41,18 +40,19 @@ package.path = project_root .. "?.lua;" ..
 ---@field WatchPaths? string[]
 ---@field WorkingDirectory? string
 ---@field ProcessType? "Standard"|"Background"|"Adaptive"
+---@field Description? string
+---@field Type? string
+---@field WantedBy? string
 ---@field SoftResourceLimits? table
 ---@field HardResourceLimits? table
 ---@field TimeOut? number
 ---@field ExitTimeOut? number
 
---- Define a launchd agent configuration.
---- Returns the config unchanged — exists for LSP type checking.
 ---@param config AgentConfig
 ---@return AgentConfig
 function defineAgent(config) return config end
 
--- Parse command and arguments
+-- Parse command
 local command = arg[1]
 local cmd_arg = arg[2]
 
@@ -60,6 +60,12 @@ if not command or command == "help" or command == "--help" or command == "-h" th
   local ll = require("llaunchd")
   ll.usage()
   os.exit(0)
+end
+
+-- Check for backend override via env
+if os.getenv("LLAUNCHD_BACKEND") then
+  local ll = require("llaunchd")
+  ll.service.init(os.getenv("LLAUNCHD_BACKEND"))
 end
 
 local ll = require("llaunchd")

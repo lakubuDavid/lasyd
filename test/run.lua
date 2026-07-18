@@ -1,12 +1,16 @@
 #!/usr/bin/env lua
--- test/run.lua — run all test_*.lua files in this directory
+-- test/run.lua — run all test_*.lua files
 
 local script_dir = arg[0]:match("(.*/)" ) or "./"
-package.path = script_dir .. "?.lua;" .. script_dir .. "../llaunchd/?.lua;" .. script_dir .. "../llaunchd/?/init.lua;" .. package.path
+local project_root = script_dir .. "../"
+
+package.path = script_dir .. "?.lua;" ..
+               project_root .. "llaunchd/?.lua;" ..
+               project_root .. "llaunchd/?/init.lua;" ..
+               package.path
 
 local test = require("test")
 
--- Find and run all test files
 local p = io.popen('ls "' .. script_dir .. '"test_*.lua 2>/dev/null')
 if not p then
   io.stderr:write("No test files found.\n")

@@ -1,8 +1,6 @@
 -- llaunchd/commands/install.lua
--- Generate plist files from service definitions → ~/Library/LaunchAgents/
 
-local service = require("llaunchd.service")
-local plist = require("llaunchd.plist")
+local service = require("service")
 
 local M = {}
 
@@ -21,34 +19,17 @@ function M.run(name)
     end
   end
 
-  -- Ensure LaunchAgents directory exists
-  local agents_dir = service.launch_agents_dir()
-  os.execute('mkdir -p "' .. agents_dir .. '"')
-
   local installed = 0
   local failed = 0
 
   for _, svc_name in ipairs(to_install) do
-    local config, err = service.load_service(svc_name)
-    if not config then
-      io.stderr:write("SKIP " .. svc_name .. ": " .. (err or "unknown") .. "\n")
-      failed = failed + 1
+    local ok, err = service.install_unit(svc_name)
+    if ok then
+      io.write("OK   " .. svc_name .. "\n")
+      installed = installed + 1
     else
-      local resolved = service.resolve_config(config)
-      local label = resolved.Label or svc_name
-      local plist_path = agents_dir .. "/" .. label .. ".plist"
-
-      local plist_content = plist.to_plist(resolved)
-      local f, werr = io.open(plist_path, "w")
-      if not f then
-        io.stderr:write("FAIL " .. svc_name .. ": cannot write " .. plist_path .. ": " .. (werr or "") .. "\n")
-        failed = failed + 1
-      else
-        f:write(plist_content)
-        f:close()
-        io.write("OK   " .. svc_name .. " → " .. plist_path .. "\n")
-        installed = installed + 1
-      end
+      io.stderr:write("FAIL " .. svc_name .. ": " .. (err or "unknown") .. "\n")
+      failed = failed + 1
     end
   end
 

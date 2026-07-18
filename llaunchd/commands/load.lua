@@ -1,7 +1,6 @@
 -- llaunchd/commands/load.lua
--- Load a service into launchctl
 
-local service = require("llaunchd.service")
+local service = require("service")
 
 local M = {}
 
@@ -13,32 +12,13 @@ function M.run(name)
     return 1
   end
 
-  -- Check service exists
-  local config, err = service.load_service(name)
-  if not config then
-    io.stderr:write("error: " .. (err or "unknown") .. "\n")
-    return 1
-  end
-
-  local label = config.Label or name
-  local plist_path = service.launch_agents_dir() .. "/" .. label .. ".plist"
-
-  -- Check plist is installed
-  local f = io.open(plist_path, "r")
-  if not f then
-    io.stderr:write("plist not installed. Run: llaunchd install " .. name .. "\n")
-    return 1
-  end
-  f:close()
-
-  -- Load into launchctl
-  io.write("Loading " .. label .. " ...\n")
-  local ret = os.execute('launchctl load "' .. plist_path .. '"')
-  if ret == 0 or ret == true then
-    io.write("Loaded " .. label .. "\n")
+  io.write("Loading " .. name .. " ...\n")
+  local ok, err = service.load_unit(name)
+  if ok then
+    io.write("Loaded " .. name .. "\n")
     return 0
   else
-    io.stderr:write("Failed to load " .. label .. "\n")
+    io.stderr:write("Failed to load " .. name .. ": " .. (err or "unknown") .. "\n")
     return 1
   end
 end
