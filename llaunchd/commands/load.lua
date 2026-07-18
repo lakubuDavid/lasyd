@@ -1,6 +1,7 @@
 -- llaunchd/commands/load.lua
 
 local service = require("service")
+local log = require("log")
 
 local M = {}
 
@@ -16,9 +17,12 @@ function M.run(name)
   local ok, err = service.load_unit(name)
   if ok then
     io.write("Loaded " .. name .. "\n")
+    log.info("loaded " .. name)
     return 0
   else
-    io.stderr:write("Failed to load " .. name .. ": " .. (err or "unknown") .. "\n")
+    local msg = name .. ": " .. (err or "unknown")
+    io.stderr:write("Failed to load " .. msg .. "\n")
+    log.error("load failed " .. msg)
     return 1
   end
 end

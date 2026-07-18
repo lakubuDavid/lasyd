@@ -1,6 +1,7 @@
 -- llaunchd/commands/status.lua
 
 local service = require("service")
+local log = require("log")
 
 local M = {}
 
@@ -14,7 +15,9 @@ function M.run(name)
 
   local config, err = service.load_service(name)
   if not config then
-    io.stderr:write("error: " .. (err or "unknown") .. "\n")
+    local msg = name .. ": " .. (err or "unknown")
+    io.stderr:write("error: " .. msg .. "\n")
+    log.error("status failed " .. msg)
     return 1
   end
 

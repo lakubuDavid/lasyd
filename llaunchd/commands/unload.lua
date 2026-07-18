@@ -1,6 +1,7 @@
 -- llaunchd/commands/unload.lua
 
 local service = require("service")
+local log = require("log")
 
 local M = {}
 
@@ -16,9 +17,12 @@ function M.run(name)
   local ok, err = service.unload_unit(name)
   if ok then
     io.write("Unloaded " .. name .. "\n")
+    log.info("unloaded " .. name)
     return 0
   else
-    io.stderr:write("Failed to unload " .. name .. ": " .. (err or "unknown") .. "\n")
+    local msg = name .. ": " .. (err or "unknown")
+    io.stderr:write("Failed to unload " .. msg .. "\n")
+    log.error("unload failed " .. msg)
     return 1
   end
 end

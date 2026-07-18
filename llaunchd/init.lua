@@ -16,6 +16,7 @@ M.commands = {
   load    = require("commands.load"),
   unload  = require("commands.unload"),
   log     = require("commands.log"),
+  errlog  = require("commands.errlog"),
 }
 
 ---Print usage help
@@ -31,6 +32,7 @@ Usage:
   llaunchd load <name>           Load service into init system
   llaunchd unload <name>         Unload service from init system
   llaunchd log <name>            Tail service log file
+  llaunchd errlog                Tail error log (~/.llaunchd/logs/llaunchd.error.log)
   llaunchd help                  Show this help
 
 Backend:

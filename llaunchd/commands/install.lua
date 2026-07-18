@@ -1,6 +1,7 @@
 -- llaunchd/commands/install.lua
 
 local service = require("service")
+local log = require("log")
 
 local M = {}
 
@@ -26,9 +27,12 @@ function M.run(name)
     local ok, err = service.install_unit(svc_name)
     if ok then
       io.write("OK   " .. svc_name .. "\n")
+      log.info("installed " .. svc_name)
       installed = installed + 1
     else
-      io.stderr:write("FAIL " .. svc_name .. ": " .. (err or "unknown") .. "\n")
+      local msg = svc_name .. ": " .. (err or "unknown")
+      io.stderr:write("FAIL " .. msg .. "\n")
+      log.error("install failed " .. msg)
       failed = failed + 1
     end
   end
