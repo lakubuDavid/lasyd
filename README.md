@@ -30,10 +30,18 @@ pi implemented the `systemd` part, I still need to test it but it works for me f
 
 ## Install
 
-```bash
-# Already installed at /usr/local/bin/lasyd
-# Or manually:
-sudo ln -s ~/Code/Lua/lasyd/bin/lasyd /usr/local/bin/lasyd
+Install the latest version through the portfolio redirect:
+
+```sh
+curl -fsSL https://lakubudavid.me/lasyd/install.sh | sh
+```
+
+The installer clones the project into `~/.local/share/lasyd` and symlinks the
+launcher into `~/.local/bin/lasyd`. For a local checkout, you can still link it
+manually:
+
+```sh
+sudo ln -sfn ~/Code/Lua/lasyd/bin/lasyd /usr/local/bin/lasyd
 ```
 
 ## Quick Start
