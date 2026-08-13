@@ -10,9 +10,9 @@ SOURCE_DIR=$SCRIPT_DIR
 TEMP_DIR=
 
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
-  CYAN='\033[36m'; GREEN='\033[32m'; YELLOW='\033[33m'; RESET='\033[0m'
+  CYAN='\033[38;2;116;141;166m'; GREEN='\033[38;2;156;180;204m'; LAVENDER='\033[38;2;211;206;223m'; YELLOW='\033[38;2;242;215;217m'; RESET='\033[0m'
 else
-  CYAN=; GREEN=; YELLOW=; RESET=
+  CYAN=; GREEN=; LAVENDER=; YELLOW=; RESET=
 fi
 
 printf '%b\n' "${CYAN}========================================${RESET}"
@@ -20,8 +20,8 @@ printf '%b\n' "${CYAN}             lasyd installer${RESET}"
 printf '%b\n' "${CYAN}========================================${RESET}"
 printf '%b\n' "${GREEN}lasyd manages user services on macOS and Linux.${RESET}"
 printf '%b\n' 'It generates launchd and systemd units from readable Lua service definitions.'
-printf '%b\n' "Install launcher: $BIN_DIR/lasyd"
-printf '%b' 'Continue with installation? [y/N] '
+printf '%b\n' "${LAVENDER}Install launcher:${RESET} $BIN_DIR/lasyd"
+printf '%b' "${YELLOW}Continue with installation? [y/N] ${RESET}"
 
 if [ "${LASYD_YES:-}" != "1" ] && [ "${LASYD_YES:-}" != "true" ]; then
   if [ -r /dev/tty ]; then
